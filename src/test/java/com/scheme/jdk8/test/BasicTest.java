@@ -5,18 +5,31 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JavaTest {
+public class BasicTest {
+
     @Test
-    public void testIntegerEquals() {
-        System.out.println("testIntegerEquals");
-        Integer a = 1;
-        Integer b = 1;
+    public void testIntegerCache() {
+        System.out.println("testIntegerCache");
+        System.out.println("127");
+        Integer a = 127;
+        Integer b = 127;
         System.out.println("a == b: " + (a == b));
 
-        Integer c = new Integer(1);
+        Integer c = new Integer(127);
         System.out.println("a == c: " + (a == c));
 
-        Integer d = Integer.valueOf(1);
+        Integer d = Integer.valueOf(127);
+        System.out.println("a == d: " + (a == d));
+
+        System.out.println("128");
+        a = 128;
+        b = 128;
+        System.out.println("a == b: " + (a == b));
+
+        c = new Integer(128);
+        System.out.println("a == c: " + (a == c));
+
+        d = Integer.valueOf(128);
         System.out.println("a == d: " + (a == d));
     }
 
@@ -60,18 +73,21 @@ public class JavaTest {
 
     @Test
     public void testMapKey() {
+        System.out.println("testMapKey");
         Map<MapKey, String> map = new HashMap<>();
         MapKey key1 = new MapKey("1");
         MapKey key2 = new MapKey("2");
         map.put(key1, "1");
         map.put(key2, "2");
         System.out.println("size: " + map.size());
+        // Comment out equals or hashcode method in MapKey to see the difference
         System.out.println("get value by old object: " + map.get(key1));
         System.out.println("get value by new object: " + map.get(new MapKey("1")));
     }
 
     @Test
     public void testDoubleToString() {
+        System.out.println("testDoubleToString");
         double d1 = 0;
         for (int i = 1; i <= 8; i++) {
             d1 += 0.1;
