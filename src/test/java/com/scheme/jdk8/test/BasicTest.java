@@ -2,6 +2,7 @@ package com.scheme.jdk8.test;
 
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,8 +87,8 @@ public class BasicTest {
     }
 
     @Test
-    public void testDoubleToString() {
-        System.out.println("testDoubleToString");
+    public void testDoubleEquals() {
+        System.out.println("testDoubleEquals");
         double d1 = 0;
         for (int i = 1; i <= 8; i++) {
             d1 += 0.1;
@@ -100,6 +101,26 @@ public class BasicTest {
         double epsilon = 0.000001d;
         System.out.println("d1 - d2 < epsilon: " + (Math.abs(d1 - d2) < epsilon));
 
+        double e = 12345678900000.12345d;
+        e = e + 1.000001d;
+        e = e + 1.000001d;
+        e = e + 1.000001d;
+        e = e + 1.000001d;
+        e = e + 1.000001d;
+        double f = 12345678900000.12345d;
+        f = f + 1.000001d;
+        f = f + 1.000001d;
+        f = f + 1.000001d;
+        f = f + 1.000001d;
+        f = f + 1.000001d;
+//      f = f + 1.00001d;
+//      f = f + 1.0001d;
+//      f = f + 1.001d;
+        System.out.println("e == f: " + (e == f));
+    }
+
+    @Test
+    public void testDoubleToString() {
         Double a = Double.valueOf(1000000);
         System.out.println(a);
         Double b = Double.valueOf(9999999);
@@ -111,5 +132,33 @@ public class BasicTest {
         System.out.println("a.equals(d): " + (a.equals(d)));
         System.out.println(Double.doubleToLongBits(a));
         System.out.println(Double.doubleToLongBits(1000000));
+    }
+
+    @Test
+    public void testCompareDoubleUsingBigDecimal() {
+        double e = 12345678900000.12345d;
+        BigDecimal a = new BigDecimal("12345678900000.12345");
+        a = a.add(new BigDecimal("1.000001"));
+        a = a.add(new BigDecimal("1.000001"));
+        a = a.add(new BigDecimal("1.000001"));
+        a = a.add(new BigDecimal("1.000001"));
+        a = a.add(new BigDecimal("1.000001"));
+        BigDecimal b = new BigDecimal("12345678900000.12345");
+        b = b.add(new BigDecimal("1.000001"));
+        b = b.add(new BigDecimal("1.000001"));
+        b = b.add(new BigDecimal("1.000001"));
+        b = b.add(new BigDecimal("1.000001"));
+        b = b.add(new BigDecimal("1.000001"));
+        System.out.println("a == b: " + (a == b));
+        System.out.println("a.equals(b): " + (a.equals(b)));
+        System.out.println("a.compareTo(b): " + (a.compareTo(b)));
+
+        BigDecimal c = a.setScale(7);
+        System.out.println(a);
+        System.out.println(c);
+        System.out.println("a.scale:" + a.scale());
+        System.out.println("c.scale:" + c.scale());
+        System.out.println("a.equals(c): " + (a.equals(c)));
+        System.out.println("a.compareTo(c): " + (a.compareTo(c)));
     }
 }
