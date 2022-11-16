@@ -1,16 +1,18 @@
 package com.scheme.jdk8.test;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAccessor;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class BasicTest {
+    private static final Logger log = LogManager.getLogger(BasicTest.class.getName());
 
     @Test
     public void testIntegerCache() {
@@ -187,5 +189,43 @@ public class BasicTest {
         System.out.println(parsed);
         TemporalAccessor parsed2 = formatter.parse("20160901");
         System.out.println(parsed2);
+    }
+
+    @Test
+    public void testBadCatchExceptionMode() throws Exception {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");
+            TemporalAccessor parsed = formatter.parse("20160901");
+        } catch (DateTimeParseException e) {
+            log.error(e);
+            throw new Exception("解析日期异常");
+        } finally {
+            throw new Exception("finally 异常");
+        }
+    }
+
+    @Test
+    public void testArraysAsList() throws Exception {
+        int[] array = new int[] {1, 2, 3};
+        List<int[]> ints = Arrays.asList(array);
+        System.out.println(ints.size());
+        System.out.println(ints);
+
+        String[] strs = new String[] {"1", "2", "3"};
+        List<String> strings = Arrays.asList(strs);
+        System.out.println(strings.size());
+        System.out.println(strings);
+        try {
+            strings.add("4");
+        } catch (Exception e) {
+            log.error("failed to add element to array list");
+        }
+        try {
+            strings.remove(0);
+        } catch (Exception e) {
+            log.error("failed to remove element from array list");
+        }
+        strs[0] = "2";
+        System.out.println(strings);
     }
 }
