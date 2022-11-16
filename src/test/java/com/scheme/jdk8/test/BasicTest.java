@@ -205,6 +205,31 @@ public class BasicTest {
     }
 
     @Test
+    public void testJoinStrings() throws Exception {
+        String[] arrays = new String[] {"1", "2", "3"};
+        StringBuilder sb = new StringBuilder();
+        for (String ele : arrays) {
+            sb.append(ele);
+            sb.append(",");
+        }
+        System.out.println(sb);
+        sb.deleteCharAt(sb.length() - 1);
+        System.out.println(sb);
+
+        StringBuilder sb2 = new StringBuilder();
+        boolean first = true;
+        for (String ele : arrays) {
+            if (first) {
+                first = false;
+            } else {
+                sb2.append(",");
+            }
+            sb2.append(ele);
+        }
+        System.out.println(sb2);
+    }
+
+    @Test
     public void testArraysAsList() throws Exception {
         int[] array = new int[] {1, 2, 3};
         List<int[]> ints = Arrays.asList(array);
