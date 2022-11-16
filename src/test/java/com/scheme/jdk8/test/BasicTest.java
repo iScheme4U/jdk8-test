@@ -3,6 +3,10 @@ package com.scheme.jdk8.test;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +14,7 @@ public class BasicTest {
 
     @Test
     public void testIntegerCache() {
+        // 判等问题 - Integer内部缓存
         System.out.println("testIntegerCache");
         System.out.println("127");
         Integer a = 127;
@@ -36,6 +41,7 @@ public class BasicTest {
 
     @Test
     public void testStringEquals() {
+        // 字符串常量池
         System.out.println("testStringEquals");
         String a = "a";
         String b = "a";
@@ -74,6 +80,7 @@ public class BasicTest {
 
     @Test
     public void testMapKey() {
+        // equals hashCode
         System.out.println("testMapKey");
         Map<MapKey, String> map = new HashMap<>();
         MapKey key1 = new MapKey("1");
@@ -81,13 +88,14 @@ public class BasicTest {
         map.put(key1, "1");
         map.put(key2, "2");
         System.out.println("size: " + map.size());
-        // Comment out equals or hashcode method in MapKey to see the difference
+        // 注释 MapKey 中的 equals 或 hashcode 方法，看看结果会有什么不同
         System.out.println("get value by old object: " + map.get(key1));
         System.out.println("get value by new object: " + map.get(new MapKey("1")));
     }
 
     @Test
     public void testDoubleEquals() {
+        // - 浮点数精度问题
         System.out.println("testDoubleEquals");
         double d1 = 0;
         for (int i = 1; i <= 8; i++) {
@@ -112,6 +120,7 @@ public class BasicTest {
         f = f + 1.000001d;
         f = f + 1.000001d;
         f = f + 1.000001d;
+        // 注释下一行，然后分别反注释后面三行，看看结果会有什么不同
         f = f + 1.000001d;
 //      f = f + 1.00001d;
 //      f = f + 1.0001d;
@@ -125,9 +134,12 @@ public class BasicTest {
         System.out.println(a);
         Double b = Double.valueOf(9999999);
         System.out.println(b);
+        // 注意c的变化
         Double c = Double.valueOf(10000000);
         System.out.println(c);
         Double d = Double.valueOf(1000000);
+        System.out.println("a == b: " + (a == b));
+        System.out.println("a.equals(b): " + (a.equals(b)));
         System.out.println("a == d: " + (a == d));
         System.out.println("a.equals(d): " + (a.equals(d)));
         System.out.println(Double.doubleToLongBits(a));
@@ -136,6 +148,7 @@ public class BasicTest {
 
     @Test
     public void testCompareDoubleUsingBigDecimal() {
+        // 使用 BigDecimal 进行比较
         double e = 12345678900000.12345d;
         BigDecimal a = new BigDecimal("12345678900000.12345");
         a = a.add(new BigDecimal("1.000001"));
@@ -153,6 +166,7 @@ public class BasicTest {
         System.out.println("a.equals(b): " + (a.equals(b)));
         System.out.println("a.compareTo(b): " + (a.compareTo(b)));
 
+        // equals 还会比较 scale
         BigDecimal c = a.setScale(7);
         System.out.println(a);
         System.out.println(c);
@@ -160,5 +174,18 @@ public class BasicTest {
         System.out.println("c.scale:" + c.scale());
         System.out.println("a.equals(c): " + (a.equals(c)));
         System.out.println("a.compareTo(c): " + (a.compareTo(c)));
+    }
+
+    @Test
+    public void testDateFormat() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+        Date date = sdf.parse("20160901");
+        System.out.println(date);
+        // 使用更严格的解析
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");
+        TemporalAccessor parsed = formatter.parse("201609");
+        System.out.println(parsed);
+        TemporalAccessor parsed2 = formatter.parse("20160901");
+        System.out.println(parsed2);
     }
 }
