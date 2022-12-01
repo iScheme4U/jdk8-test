@@ -55,6 +55,11 @@ public class BasicTest {
 
         String d = String.valueOf("a");
         System.out.println("a == d: " + (a == d));
+        // 调试查看 aa, ba 两个元素的内存存储
+        String aa = "aa";
+        String ba = "aa";
+
+        System.out.println("aa == ba: " + (aa == ba));
     }
 
     private static class MapKey {
