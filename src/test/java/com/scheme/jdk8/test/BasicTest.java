@@ -22,17 +22,22 @@ public class BasicTest {
         System.out.println("127");
         Integer a = 127;
         Integer b = 127;
+        // 内存地址是同一个吗？
         System.out.println("a == b: " + (a == b));
 
+        // new 的话，会使用缓存吗？
         Integer c = new Integer(127);
         System.out.println("a == c: " + (a == c));
 
+        // valueOf 会使用缓存吗？
         Integer d = Integer.valueOf(127);
         System.out.println("a == d: " + (a == d));
 
+        // 128 会使用缓存吗？
         System.out.println("128");
         a = 128;
         b = 128;
+        // 内存地址是同一个吗？
         System.out.println("a == b: " + (a == b));
 
         c = new Integer(128);
@@ -50,15 +55,18 @@ public class BasicTest {
         String b = "a";
         System.out.println("a == b: " + (a == b));
 
+        // 是同一个对象吗？
         String c = new String("a");
         System.out.println("a == c: " + (a == c));
 
         String d = String.valueOf("a");
+        // 是同一个对象吗？
         System.out.println("a == d: " + (a == d));
         // 调试查看 aa, ba 两个元素的内存存储
         String aa = "aa";
         String ba = "aa";
 
+        // 是同一个对象吗？
         System.out.println("aa == ba: " + (aa == ba));
     }
 
@@ -98,6 +106,7 @@ public class BasicTest {
         System.out.println("size: " + map.size());
         // 注释 MapKey 中的 equals 或 hashcode 方法，看看结果会有什么不同
         System.out.println("get value by old object: " + map.get(key1));
+        // 能取出原来存储的值吗？
         System.out.println("get value by new object: " + map.get(new MapKey("1")));
     }
 
@@ -144,11 +153,13 @@ public class BasicTest {
         System.out.println(b);
         // 注意c的变化
         Double c = Double.valueOf(10000000);
+        // 观察 toString 变成什么了？
         System.out.println(c);
         Double d = Double.valueOf(1000000);
         System.out.println("a == b: " + (a == b));
         System.out.println("a.equals(b): " + (a.equals(b)));
         System.out.println("a == d: " + (a == d));
+        // 观察 Double.toString 方法是怎么实现的
         System.out.println("a.equals(d): " + (a.equals(d)));
         System.out.println(Double.doubleToLongBits(a));
         System.out.println(Double.doubleToLongBits(1000000));
@@ -180,7 +191,9 @@ public class BasicTest {
         System.out.println(c);
         System.out.println("a.scale:" + a.scale());
         System.out.println("c.scale:" + c.scale());
+        // 还相等吗？
         System.out.println("a.equals(c): " + (a.equals(c)));
+        // 这里会返回什么？
         System.out.println("a.compareTo(c): " + (a.compareTo(c)));
     }
 
@@ -201,9 +214,11 @@ public class BasicTest {
     public void testBadCatchExceptionMode() throws Exception {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");
-            TemporalAccessor parsed = formatter.parse("20160901");
+            formatter.parse("20160901");
         } catch (DateTimeParseException e) {
+            // 这样好吗？
             log.error(e);
+            // 这样好吗？
             throw new Exception("解析日期异常");
         } finally {
             throw new Exception("finally 异常");
@@ -213,6 +228,7 @@ public class BasicTest {
     @Test
     public void testJoinStrings() throws Exception {
         String[] arrays = new String[] {"1", "2", "3"};
+        // 这种方案会有什么问题？
         StringBuilder sb = new StringBuilder();
         for (String ele : arrays) {
             sb.append(ele);
@@ -222,6 +238,7 @@ public class BasicTest {
         sb.deleteCharAt(sb.length() - 1);
         System.out.println(sb);
 
+        // 上面方案的问题，下面的方案解决了吗？
         StringBuilder sb2 = new StringBuilder();
         boolean first = true;
         for (String ele : arrays) {
@@ -257,14 +274,22 @@ public class BasicTest {
             log.error("failed to remove element from array list");
         }
         strs[0] = "2";
+        // 观察对原来值的影响
         System.out.println(strings);
     }
 
     @Test
     public void testThreadPool() throws ExecutionException, InterruptedException {
         // 一个核心线程，队列最大为1，最大线程数也是1.拒绝策略是DiscardPolicy
-        ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 1L, TimeUnit.MINUTES,
-                new ArrayBlockingQueue<>(1), new ThreadPoolExecutor.DiscardPolicy());
+        // 注意各个参数是什么意思
+        ThreadPoolExecutor executorService = new ThreadPoolExecutor(
+                1,
+                1,
+                1L,
+                TimeUnit.MINUTES,
+                new ArrayBlockingQueue<>(1),
+                new ThreadPoolExecutor.DiscardPolicy()
+        );
 
         Future f1 = executorService.submit(()-> {
             System.out.println("提交任务1");
@@ -283,8 +308,11 @@ public class BasicTest {
             System.out.println("提交任务3");
         });
 
+        // 任务1会完成吗？
         System.out.println("任务1完成 " + f1.get());// 等待任务1执行完毕
+        // 任务2会完成吗？
         System.out.println("任务2完成 " + f2.get());// 等待任务2执行完毕
+        // 任务3会完成吗？
         System.out.println("任务3完成 " + f3.get());// 等待任务3执行完毕
 
         executorService.shutdown();// 关闭线程池，阻塞直到所有任务执行完毕
