@@ -280,6 +280,7 @@ public class BasicTest {
 
     @Test
     public void testThreadPool() throws ExecutionException, InterruptedException {
+        System.out.println("当前线程：" + Thread.currentThread().getName());
         // 一个核心线程，队列最大为1，最大线程数也是1.拒绝策略是DiscardPolicy
         // 注意各个参数是什么意思
         ThreadPoolExecutor executorService = new ThreadPoolExecutor(
@@ -292,7 +293,7 @@ public class BasicTest {
         );
 
         Future f1 = executorService.submit(()-> {
-            System.out.println("提交任务1");
+            System.out.println("线程：" + Thread.currentThread().getName() + "：提交任务1");
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
@@ -301,19 +302,20 @@ public class BasicTest {
         });
 
         Future f2 = executorService.submit(()->{
-            System.out.println("提交任务2");
+            System.out.println("线程：" + Thread.currentThread().getName() + "：提交任务2");
         });
 
         Future f3 = executorService.submit(()->{
-            System.out.println("提交任务3");
+            System.out.println("线程：" + Thread.currentThread().getName() + "：提交任务3");
         });
 
+        System.out.println("当前线程：" + Thread.currentThread().getName());
         // 任务1会完成吗？
-        System.out.println("任务1完成 " + f1.get());// 等待任务1执行完毕
+        System.out.println("任务1完成： " + f1.get());// 等待任务1执行完毕
         // 任务2会完成吗？
-        System.out.println("任务2完成 " + f2.get());// 等待任务2执行完毕
+        System.out.println("任务2完成： " + f2.get());// 等待任务2执行完毕
         // 任务3会完成吗？
-        System.out.println("任务3完成 " + f3.get());// 等待任务3执行完毕
+        System.out.println("任务3完成： " + f3.get());// 等待任务3执行完毕
 
         executorService.shutdown();// 关闭线程池，阻塞直到所有任务执行完毕
     }
